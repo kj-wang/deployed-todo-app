@@ -25,8 +25,7 @@ const App = () => {
   useEffect(() => {
     if (authToken) {
       getData()
-    }
-  }
+    }}
     , [])
 
 
@@ -49,4 +48,4 @@ const App = () => {
   );
 }
 
-export default App;
+export default App

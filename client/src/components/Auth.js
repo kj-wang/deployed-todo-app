@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react'
 import { useCookies } from 'react-cookie'
 
 const Auth = () => {
@@ -22,29 +22,24 @@ const Auth = () => {
       setError('Make sure passwords match!')
       return
     }
+    
+    const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({email, password})
+    })
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
+    const data = await response.json()
 
+    if (data.detail) {
+      setError(data.detail)
+    } else {
+      setCookie('Email', data.email)
+      setCookie('AuthToken', data.token)
 
-      const data = await response.json()
-
-      if (data.detail) {
-        setError(data.detail)
-      } else {
-        setCookie('Email', data.email)
-        setCookie('AuthToken', data.token)
-
-        window.location.reload()
-      }
+      window.location.reload()
     }
-    catch(e){
-      setError(e.message)
-    }
+
   }
 
   return (
